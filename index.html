@@ -1105,6 +1105,12 @@ async function confirmBooking() {
   }
 }
 }
+async function loadProviders() {
+  const res = await fetch("https://skillbridge-api-dubtgvamhye2bzct.eastasia-01.azurewebsites.net/api/getProviders");
+  const data = await res.json();
+  console.log(data);
+}
+loadProviders();
 function filterTag(el) {
   document.querySelectorAll('.skill-tag').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
