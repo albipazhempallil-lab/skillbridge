@@ -1059,11 +1059,23 @@
 
 <script>
 
-console.log("NEW VERSION LOADED");
+document.addEventListener("DOMContentLoaded", function () {
 
-// Set min date to today
-document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
-document.getElementById('bookingDate').value = new Date().toISOString().split('T')[0];
+  console.log("SCRIPT LOADED");
+
+  document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
+  document.getElementById('bookingDate').value = new Date().toISOString().split('T')[0];
+
+  async function loadProviders() {
+    console.log("Function running...");
+    const res = await fetch("https://skillbridge-api-dubtgvamhye2bzct.eastasia-01.azurewebsites.net/api/getProviders");
+    const data = await res.json();
+    console.log(data);
+  }
+
+  loadProviders();
+
+});
 
 function openModal(providerName) {
   document.getElementById('modalOverlay').classList.add('open');
