@@ -1056,26 +1056,47 @@
 <div class="toast" id="toast">
   <span class="toast-icon">✓</span> Booking confirmed! You'll receive an SMS shortly.
 </div>
-
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
 
   console.log("SCRIPT LOADED");
 
-  document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
-  document.getElementById('bookingDate').value = new Date().toISOString().split('T')[0];
+  // Set date
+  const dateEl = document.getElementById('bookingDate');
+  if (dateEl) {
+    dateEl.min = new Date().toISOString().split('T')[0];
+    dateEl.value = new Date().toISOString().split('T')[0];
+  }
 
+  // 🔥 LOAD PROVIDERS
   async function loadProviders() {
-    console.log("Function running...");
-    const res = await fetch("https://skillbridge-api-dubtgvamhye2bzct.eastasia-01.azurewebsites.net/api/getProviders");
-    const data = await res.json();
-    console.log(data);
+    try {
+      console.log("API CALL STARTED");
+
+      const res = await fetch("https://skillbridge-api-dubtgvamhye2bzct.eastasia-01.azurewebsites.net/api/getProviders");
+      const data = await res.json();
+
+      console.log("API DATA:", data);
+
+    } catch (err) {
+      console.error("API ERROR:", err);
+    }
   }
 
   loadProviders();
 
+  // Search enter key fix
+  const searchEl = document.getElementById('searchInput');
+  if (searchEl) {
+    searchEl.addEventListener('keypress', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+  }
+
 });
+
+
+// ===== GLOBAL FUNCTIONS =====
 
 function openModal(providerName) {
   document.getElementById('modalOverlay').classList.add('open');
@@ -1084,16 +1105,20 @@ function openModal(providerName) {
     ? `Booking with ${providerName}. Fill in your details below.`
     : 'Select your date, time, and details below.';
 }
+
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
 }
+
 function closeModalOnBg(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
+
 function selectTime(el) {
   document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
   el.classList.add('selected');
 }
+
 async function confirmBooking() {
   try {
     const response = await fetch("https://skillbridge-api-dubtgvamhye2bzct.eastasia-01.azurewebsites.net/api/bookService", {
@@ -1110,8 +1135,7 @@ async function confirmBooking() {
 
     const result = await response.json();
 
-    alert(result.message); // shows "Booking successful"
-
+    alert(result.message);
     closeModal();
 
   } catch (error) {
@@ -1119,26 +1143,15 @@ async function confirmBooking() {
     console.error(error);
   }
 }
-}
-async function loadProviders() {
-  const res = await fetch("https://skillbridge-api-dubtgvamhye2bzct.eastasia-01.azurewebsites.net/api/getProviders");
-  const data = await res.json();
-  console.log(data);
-}
-loadProviders();
+
 function filterTag(el) {
   document.querySelectorAll('.skill-tag').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 }
+
 function doSearch() {
   const q = document.getElementById('searchInput').value;
   if (q.trim()) openModal();
-}
-const searchEl = document.getElementById('searchInput');
-if (searchEl) {
-  searchEl.addEventListener('keypress', e => {
-    if (e.key === 'Enter') doSearch();
-  });
 }
 </script>
 </body>
