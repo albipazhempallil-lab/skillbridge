@@ -1134,9 +1134,12 @@ function doSearch() {
   const q = document.getElementById('searchInput').value;
   if (q.trim()) openModal();
 }
-document.getElementById('searchInput').addEventListener('keypress', e => {
-  if (e.key === 'Enter') doSearch();
-});
+const searchEl = document.getElementById('searchInput');
+if (searchEl) {
+  searchEl.addEventListener('keypress', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+}
 </script>
 </body>
 </html>
